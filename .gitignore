@@ -1,0 +1,31 @@
+# Build & Install files
+**/build
+**/install
+**/CMakeFiles
+Makefile
+cmake_install.cmake
+CMakeUserPresets.json
+CMakeCache.txt
+
+# IDE files
+**/.cache
+**/.clangd
+**/.vscode
+**/.venv
+**/venv
+compile_commands.json
+
+# Output files
+*.log
+*.vtu
+*.pvtu
+*.vtk
+frames
+
+# Executables
+main
+main-release
+main-debug
+
+# Mac
+.DS_Store
