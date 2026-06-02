@@ -32,13 +32,13 @@ private:
   DEAL_II_ALWAYS_INLINE ScalarValue
   g(ScalarValue phi) const
   {
-    return 30.0 * phi * phi * (1.0 - phi) * (1.0 - phi) + reg;
+    return 30.0 * phi * (1.0 - phi) + reg;
   }
 
   DEAL_II_ALWAYS_INLINE ScalarValue
   g_prime(ScalarValue phi) const
   {
-    return 60.0 * (phi - 1.0) * phi * (2.0 * phi - 1.0);
+    return 30.0 - 60.0 * phi;
   }
 
   DEAL_II_ALWAYS_INLINE ScalarValue
@@ -72,11 +72,11 @@ private:
       {
         const double r1     = (point - dealii::Point<dim>(30.0, 50.0)).norm();
         const double r2     = (point - dealii::Point<dim>(70.0, 50.0)).norm();
-        const double radius = 25.0;
+        const double radius = 20.0;
 
         // phi = 1 inside either circle, 0 outside, smooth tanh interface
-        const double phi1 = 0.5 * (1.0 - std::tanh((r1 - radius) / (2.0 * epsilon[0])));
-        const double phi2 = 0.5 * (1.0 - std::tanh((r2 - radius) / (2.0 * epsilon[0])));
+        const double phi1 = 0.5 * (1.0 - std::tanh(3.0 * (r1 - radius) / epsilon[0]));
+        const double phi2 = 0.5 * (1.0 - std::tanh(3.0 * (r2 - radius) / epsilon[0]));
 
         const double phi = std::min(phi1 + phi2, 1.0);
 
@@ -118,7 +118,7 @@ private:
   }
 
   ScalarValue epsilon;
-  ScalarValue reg = 1.0e-3;
+  ScalarValue reg = 1.0e-2;
 };
 
 PRISMS_PF_END_NAMESPACE

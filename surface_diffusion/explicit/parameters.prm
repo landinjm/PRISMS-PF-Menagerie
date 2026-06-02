@@ -4,8 +4,8 @@ subsection Rectangular mesh
   set z size = 100
 end
 
-set global refinement = 6
-set max refinement = 6
+set global refinement = 7
+set max refinement = 7
 set min refinement = 4
 set mesh adaptivity = false
 set remeshing period = 1000
