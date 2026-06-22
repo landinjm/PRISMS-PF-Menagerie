@@ -1,0 +1,20 @@
+name: pre-commit
+
+on:
+  push:
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request'}}
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-python@v6
+      with:
+        python-version: 3.x
+    - uses: pre-commit/action@v3.0.1
+    - uses: pre-commit-ci/lite-action@v1.1.0
+      if: always()
