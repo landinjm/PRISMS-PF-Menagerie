@@ -1,0 +1,40 @@
+subsection Rectangular mesh
+  set x size = 20.0
+  set y size = 20.0
+  set z size = 20.0
+  set x subdivisions = 1
+  set y subdivisions = 1
+  set z subdivisions = 1
+  set x lower bound = -20.0
+  set y lower bound = -20.0
+  set z lower bound = -20.0
+end
+
+set global refinement = 7
+set max refinement = 7
+set min refinement = 2
+set mesh adaptivity = true
+set remeshing period = 250
+
+subsection refinement criterion: 0
+  set variables                      = phi
+  set type                           = value
+  set value lower bound              = -0.999
+  set value upper bound              = 0.999
+end
+
+set time step = 0.0002
+set number steps = 20000
+
+subsection output
+  set condition = EQUAL_SPACING
+  set number = 50
+end
+
+set Model constant u_0 = 0.7, DOUBLE
+set Model constant L_sat = 1.0, DOUBLE
+set Model constant epsilon_xy = 0.02, DOUBLE
+set Model constant epsilon_z = 0.3, DOUBLE
+set Model constant Gamma = 0.5, DOUBLE
+set Model constant lambda = 3.0, DOUBLE
+set Model constant reg_val = 1.0e-10, DOUBLE
