@@ -6,7 +6,7 @@
 
 #include <prismspf/core/pde_operator_base.h>
 
-#include <prismspf/utilities/crystal_symmetry.h>
+#include <prismspf/utilities/symmetry.h>
 
 PRISMS_PF_BEGIN_NAMESPACE
 
@@ -76,8 +76,8 @@ private:
   DEAL_II_ALWAYS_INLINE inline ScalarValue
   A(ScalarGrad n) const
   {
-    using Symmetries::cos_psi;
-    using Symmetries::cos_theta;
+    using Symmetry::cos_psi;
+    using Symmetry::cos_theta;
     return number(1) + epsilon_xy * cos_theta<6>(n[0], n[1]) +
            epsilon_z * cos_psi<2>(n[0], n[1], n[2]);
   }
@@ -94,14 +94,14 @@ private:
   DEAL_II_ALWAYS_INLINE inline ScalarValue
   d_A_d_theta(ScalarGrad n) const
   {
-    using Symmetries::sin_theta;
+    using Symmetry::sin_theta;
     return -epsilon_xy * number(6) * sin_theta<6>(n[0], n[1]);
   }
 
   DEAL_II_ALWAYS_INLINE inline ScalarValue
   d_A_d_psi(ScalarGrad n) const
   {
-    using Symmetries::sin_psi;
+    using Symmetry::sin_psi;
     return -epsilon_z * number(2) * sin_psi<2>(n[0], n[1], n[2]);
   }
 
@@ -170,7 +170,7 @@ private:
         // Order parameter evolution
         ScalarValue d_phi_d_t = xi / fixed_power<2>(A_n);
 
-        // The gradient must consider horizontal and vertial growth preference. As such,
+        // The gradient must consider horizontal and vertical growth preference. As such,
         // we multiply by Gamma. We do this twice because there's two gradient operators.
         phi_grad[2] *= Gamma * Gamma;
 
@@ -217,7 +217,7 @@ private:
         ScalarGrad d_A_n_d_grad_phi =
           d_A_d_theta(normal) * d_theta_d_grad_phi + d_A_d_psi(normal) * d_psi_d_grad_phi;
 
-        // The gradient must consider horizontal and vertial growth preference. As such,
+        // The gradient must consider horizontal and vertical growth preference. As such,
         // we multiply by Gamma. We do this twice because there's two gradient operators.
         phi_grad[2] *= Gamma * Gamma;
 

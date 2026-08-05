@@ -6,20 +6,18 @@
 #include <prismspf/core/parse_cmd_options.h>
 #include <prismspf/core/problem.h>
 
-using namespace prisms;
+using namespace prismspf;
 
 int
 main(int argc, char *argv[])
 {
   // Initialize MPI
-  prisms::MPI_InitFinalize mpi_init(argc, argv, dealii::numbers::invalid_unsigned_int);
-
-  // Restrict deal.II console printing
-  dealii::deallog.depth_console(0);
+  MPIInitFinalize mpi_init(argc, argv);
 
   // Parse the command line options (if there are any) to get the name of the input
   // file
   ParseCMDOptions cli_options(argc, argv);
+  std::string     parameters_filename = cli_options.get_parameters_filename();
 
   constexpr unsigned int dim    = 3;
   constexpr unsigned int degree = 1;
@@ -31,9 +29,9 @@ main(int argc, char *argv[])
    *   xi - The auxiliary field used to split the order parameter evolution equation
    *
    * The first three equations are explicit with U and phi evolving with a forward Euler
-   * time integration scheme. The interesting particle of the equation is xi, which we use
-   * to make the evaluation of phi easier. This auxiliary field, xi, has no initial
-   * condition and is only used to evolve the order parameter.
+   * time integration scheme. The interesting part of the equation is xi, which we use to
+   * make the evaluation of phi easier. This auxiliary field, xi, has no initial condition
+   * and is only used to evolve the order parameter.
    */
   std::vector<FieldAttributes> fields = {FieldAttributes("u"),
                                          FieldAttributes("phi"),
@@ -58,10 +56,10 @@ main(int argc, char *argv[])
   PhaseFieldTools<dim>           pf_tools;
   CustomPDE<dim, degree, double> pde_operator(user_inputs, pf_tools);
   Problem<dim, degree, double>   problem(fields,
-                                         solves,
-                                         user_inputs,
-                                         pf_tools,
-                                         pde_operator);
+                                       solves,
+                                       user_inputs,
+                                       pf_tools,
+                                       pde_operator);
   problem.solve();
 
   return 0;

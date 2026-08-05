@@ -2,11 +2,11 @@
 #  CMake script for the PRISMS-PF applications
 ##
 
-cmake_minimum_required(VERSION 3.28)
-cmake_policy(VERSION 3.28)
+cmake_minimum_required(VERSION 3.25)
+cmake_policy(VERSION 3.25)
 
 # Name the application
-set(APPLICATION_NAME "alloy_solidification")
+set(APPLICATION_NAME "snow_crystal")
 
 # Create a project for the application
 project(${APPLICATION_NAME} CXX)
@@ -62,9 +62,12 @@ set_target_properties(
 )
 
 # Link PRISMS-PF
+# If we're in Debug configuration and PRISMS_PF_BUILD_TYPE is DebugRelease, link to the prisms_pf_debug target,
+# which is only available in prisms_pf DebugRelease configuration.
+# Otherwise link to the prisms_pf target, which may be debug or release
 target_link_libraries(
   ${APPLICATION_NAME}
   PRIVATE
-    $<$<CONFIG:Debug>:PRISMS-PF::prisms_pf_debug>
-    $<$<CONFIG:Release>:PRISMS-PF::prisms_pf_release>
+    $<IF:$<AND:$<CONFIG:Debug>,$<STREQUAL:${PRISMS_PF_BUILD_TYPE},DebugRelease>>,PRISMS-PF::prisms_pf_debug,
+    PRISMS-PF::prisms_pf>
 )

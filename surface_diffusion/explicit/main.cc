@@ -12,7 +12,7 @@ int
 main(int argc, char *argv[])
 {
   // Initialize MPI
-  prismspf::MPIInitFinalize mpi_init(argc, argv);
+  MPIInitFinalize mpi_init(argc, argv);
 
   // Parse the command line options (if there are any) to get the name of the input
   // file
