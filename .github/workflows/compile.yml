@@ -1,0 +1,47 @@
+name: compile-applications
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    # Run on the first Tuesday of every month at 8am UTC-5
+    - cron: "0 13 1-7 * 2"
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request'}}
+
+jobs:
+  CI:
+    if: github.repository == 'landinjm/PRISMS-PF-Menagerie' # Don't run on forks
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runs-on: ubuntu-24.04
+          - platform: linux/arm64
+            runs-on: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 120
+    container:
+      image: landinjm/prisms-pf:alpine-master-minimal
+      options: --user root
+    steps:
+      - uses: laverdet/alpine-arm64@v1
+        if: matrix.platform == 'linux/arm64'
+
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Run tests
+        run: |
+          jobs=$(( $(nproc) / 2 ))
+          [ "$jobs" -lt 1 ] && jobs=1
+          export CMAKE_BUILD_PARALLEL_LEVEL=$jobs
+
+          echo "Using $CMAKE_BUILD_PARALLEL_LEVEL build jobs"
+          cmake -B build
+          cmake --build build
