@@ -1,0 +1,19 @@
+set mesh type = rectangular
+
+subsection Rectangular mesh
+  set y size = 32
+  set x periodic = true
+  set y periodic = true
+	set z periodic = true
+end
+
+set global refinement = 5
+
+set time step = 5.0e-2
+set number steps = 100000
+
+subsection output
+  set condition = EQUAL_SPACING
+  set number = 100
+  set file type = vtu
+end
